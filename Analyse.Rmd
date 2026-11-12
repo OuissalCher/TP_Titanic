@@ -1,0 +1,75 @@
+---
+title: "Analyse"
+author: "Ouissal CHEROUAT"
+date: "2026-11-12"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(carData)
+data(TitanicSurvival)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+# 1. Présentation et statistiques descriptives
+str(TitanicSurvival)
+summary(TitanicSurvival)
+```
+
+# Présentation et statistiques descriptives :
+
+Le jeu de données comprend 1 309 observations (passagers) réparties sur 4 variables. On dénombre 809 non-survivants pour 500 survivants. L'échantillon comporte 843 hommes et 466 femmes. Concernant la classe, la 3e classe est la plus représentée (709 passagers), suivie de la 1re classe (323) et de la 2e classe (277). L'âge moyen est d'environ 29,88 ans (médiane à 28 ans), avec un minimum de 0,17 an et un maximum de 80 ans, ainsi que 263 valeurs manquantes (NA).
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+# Histogramme et courbe de densité pour l'âge
+ggplot(TitanicSurvival, aes(x = age)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "white", alpha = 0.7) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Distribution de l'âge (Asymétrie)", x = "Âge", y = "Densité") +
+  theme_minimal()
+```
+
+# Distribution de l'âge :
+
+L'histogramme met en évidence une distribution asymétrique positive (à droite), avec une forte concentration de passagers jeunes (pic entre 20 et 30 ans) et une longue traîne s'étirant vers les âges plus avancés.
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+# 2. Répartition des survivants en fonction du sexe
+ggplot(TitanicSurvival, aes(x = sex, fill = survived)) +
+  geom_bar(position = "fill") +
+  labs(title = "Taux de survie par sexe", y = "Proportion", x = "Sexe")
+```
+
+# Impact du Sexe :
+
+Le taux de survie est radicalement plus élevé chez les femmes (\~73 %) que chez les hommes (\~20 %), illustrant la règle prioritaire d'évacuation.
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+# 3. Répartition des survivants en fonction de la classe
+ggplot(TitanicSurvival, aes(x = passengerClass, fill = survived)) +
+  geom_bar(position = "fill") +
+  labs(title = "Taux de survie par classe", y = "Proportion", x = "Classe")
+```
+
+# Impact de la Classe :
+
+La classe du billet a exercé un rôle majeur, le taux de survie chutant fortement selon le rang social, passant de \~62 % en 1ʳᵉ classe à \~43 % en 2ᵉ classe et \~25 % en 3ᵉ classe.
+
+```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+# 4. Âge en fonction de la variable survived
+ggplot(TitanicSurvival, aes(x = survived, y = age, fill = survived)) +
+  geom_boxplot() +
+  labs(title = "Distribution de l'âge selon la survie", x = "Survécu", y = "Âge")
+```
+
+# Distribution de l'âge selon la survie :
+
+Le diagramme en boîtes à moustaches montre que l'âge médian est rigoureusement identique dans les deux groupes (fixé à 28 ans). La dispersion des âges (représentée par l'étendue des boîtes) et la présence de valeurs extrêmes chez les passagers plus âgés sont également similaires entre les survivants et les non-survivants. Cela confirme que l'âge n'a pas constitué un facteur discriminant majeur dans la survie globale des passagers.
+
+
