@@ -1,0 +1,16 @@
+Package: TitanicPackage
+Title: Fonctions d'Analyse du Jeu de Données Titanic
+Version: 0.0.0.9000
+Authors@R:
+    person("Ouissal", "CHEROUAT", email = "ouissal96cherouat@gmail.com", role = c("aut", "cre"))
+Description: Package réalisé dans le cadre du TP Titanic. Il contient une
+    fonction qui calcule le taux de survie des passagers du Titanic en
+    fonction d'une variable donnée (sexe, classe...).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    dplyr
+Suggests:
+    carData
