@@ -1,24 +1,32 @@
 ---
-title: "Analyse"
+title: "Analyse du dataset Titanic"
 author: "Ouissal CHEROUAT"
 date: "2026-11-12"
 output:
-  pdf_document:
-    latex_engine: xelatex
   html_document:
     df_print: paged
 ---
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 library(carData)
 data(TitanicSurvival)
 library(dplyr)
 library(ggplot2)
+library(TitanicPackage)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Présentation des données :
+
+Le jeu de données `TitanicSurvival` (package `carData`) contient des informations sur les passagers du Titanic, qui a fait naufrage en avril 1912. Chaque ligne correspond à un passager et les variables sont :
+
+- `survived` : le passager a-t-il survécu ? (no / yes)
+- `sex` : sexe du passager (female / male)
+- `age` : âge en années (les enfants de moins d'un an ont un âge fractionnaire)
+- `passengerClass` : classe du billet (1st, 2nd, 3rd)
+
+```{r}
 # 1. Présentation et statistiques descriptives
 str(TitanicSurvival)
 summary(TitanicSurvival)
@@ -30,7 +38,7 @@ Le jeu de données comprend 1 309 observations (passagers) réparties sur 4 vari
 
 ------------------------------------------------------------------------
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
 # 2. Répartition des survivants en fonction du sexe
 ggplot(TitanicSurvival, aes(x = sex, fill = survived)) +
   geom_bar(position = "fill") +
@@ -39,11 +47,11 @@ ggplot(TitanicSurvival, aes(x = sex, fill = survived)) +
 
 # Impact du Sexe :
 
-Le taux de survie est radicalement plus élevé chez les femmes (\~73 %) que chez les hommes (\~20 %), illustrant la règle prioritaire d'évacuation.
+Le taux de survie est radicalement plus élevé chez les femmes (\~73 %) que chez les hommes (\~19 %), illustrant la règle prioritaire d'évacuation (« les femmes et les enfants d'abord »).
 
 ------------------------------------------------------------------------
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
 # 3. Répartition des survivants en fonction de la classe
 ggplot(TitanicSurvival, aes(x = passengerClass, fill = survived)) +
   geom_bar(position = "fill") +
@@ -52,11 +60,11 @@ ggplot(TitanicSurvival, aes(x = passengerClass, fill = survived)) +
 
 # Impact de la Classe :
 
-La classe du billet a exercé un rôle majeur, le taux de survie chutant fortement selon le rang social, passant de \~62 % en 1ʳᵉ classe à \~43 % en 2ᵉ classe et \~25 % en 3ᵉ classe.
+La classe du billet a exercé un rôle majeur, le taux de survie chutant fortement selon le rang social, passant de \~62 % en 1ʳᵉ classe à \~43 % en 2ᵉ classe et \~26 % en 3ᵉ classe.
 
 ------------------------------------------------------------------------
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
 # 4. Âge en fonction de la variable survived
 ggplot(TitanicSurvival, aes(x = survived, y = age, fill = survived)) +
   geom_boxplot() +
@@ -65,6 +73,22 @@ ggplot(TitanicSurvival, aes(x = survived, y = age, fill = survived)) +
 
 # Distribution de l'âge selon la survie :
 
-Le diagramme en boîtes à moustaches montre que l'âge médian est rigoureusement identique dans les deux groupes (fixé à 28 ans). La dispersion des âges (représentée par l'étendue des boîtes) et la présence de valeurs extrêmes chez les passagers plus âgés sont également similaires entre les survivants et les non-survivants. Cela confirme que l'âge n'a pas constitué un facteur discriminant majeur dans la survie globale des passagers.
+Le diagramme en boîtes à moustaches montre que l'âge médian est très proche dans les deux groupes (environ 28 ans). La dispersion des âges (représentée par l'étendue des boîtes) et la présence de valeurs extrêmes chez les passagers plus âgés sont également similaires entre les survivants et les non-survivants. À première vue, l'âge ne semble donc pas être un facteur discriminant majeur dans la survie des passagers. Attention toutefois : 263 âges sont manquants, et ce graphique ne tient compte ni du sexe ni de la classe.
+
+------------------------------------------------------------------------
+
+# Analyse avec le package personnalisé :
+
+La fonction `taux_survie()` du package `TitanicPackage` calcule le taux de survie selon une variable donnée.
+
+```{r, echo=TRUE}
+# 1. Taux de survie en fonction du sexe
+taux_survie(TitanicSurvival, "sex")
+
+# 2. Taux de survie en fonction de la classe des passagers
+taux_survie(TitanicSurvival, "passengerClass")
+```
+
+Les résultats obtenus avec le package sont les mêmes que ceux observés sur les graphiques : environ 73 % de survie chez les femmes contre 19 % chez les hommes, et 62 %, 43 % et 26 % de survie respectivement en 1re, 2e et 3e classe.
 
 *Fin, Merci !*
